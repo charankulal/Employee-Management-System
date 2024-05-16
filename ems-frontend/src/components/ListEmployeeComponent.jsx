@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { listEmployees } from "../services/EmployeeService";
 
+
 const ListEmployeeComponent = () => {
   const [employees, setEmployees] = useState([]);
   useEffect(() => {
@@ -14,7 +15,10 @@ const ListEmployeeComponent = () => {
       });
   }, []);
   return (
+    
+    
     <div className="container">
+      
       <h2 className="text-center mt-5 mb-2">List of Employees</h2>
       <table className="table table-striped table-bordered">
         <thead>
@@ -37,6 +41,8 @@ const ListEmployeeComponent = () => {
         </tbody>
       </table>
     </div>
+    
+    
   );
 };
 
