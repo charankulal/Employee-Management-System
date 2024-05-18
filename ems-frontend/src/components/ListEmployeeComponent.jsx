@@ -1,12 +1,16 @@
 // import React from 'react'
 import { useEffect, useState } from "react";
-import { listEmployees } from "../services/EmployeeService";
+import { deleteEmployee, listEmployees } from "../services/EmployeeService";
 import { useNavigate } from "react-router-dom";
 
 const ListEmployeeComponent = () => {
   const [employees, setEmployees] = useState([]);
   const navigator = useNavigate();
   useEffect(() => {
+    getAllEmployees();
+  }, [employees]);
+
+  function getAllEmployees() {
     listEmployees()
       .then((response) => {
         setEmployees(response.data);
@@ -14,14 +18,21 @@ const ListEmployeeComponent = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
-
-  function addNewEmployee() {
-    navigator('/add-employee')
   }
 
-  function updateEmployee(id){
-    navigator(`/edit-employee/${id}`)
+  function addNewEmployee() {
+    navigator("/add-employee");
+  }
+
+  function updateEmployee(id) {
+    navigator(`/edit-employee/${id}`);
+  }
+
+  function removeEmployee(id) {
+    console.log(id);
+    deleteEmployee(id);
+
+    getAllEmployees();
   }
   return (
     <div className="container">
@@ -40,7 +51,7 @@ const ListEmployeeComponent = () => {
             <th>Employee Firstname</th>
             <th>Employee Lastname</th>
             <th>Employee Email ID</th>
-            <th>Actions</th>
+            <th className="col-2">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -50,8 +61,19 @@ const ListEmployeeComponent = () => {
               <td>{employee.firstName}</td>
               <td>{employee.lastName}</td>
               <td>{employee.email}</td>
-              <td>
-                <button className="btn btn-info" onClick={()=>updateEmployee(employee.id)}>Update</button>
+              <td className="text-center">
+                <button
+                  className="btn btn-info mx-2"
+                  onClick={() => updateEmployee(employee.id)}
+                >
+                  Update
+                </button>
+                <button
+                  className="btn btn-danger mx-2"
+                  onClick={() => removeEmployee(employee.id)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
