@@ -1,6 +1,10 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
-import { createEmployee, getEmployee } from "../services/EmployeeService";
+import {
+  createEmployee,
+  getEmployee,
+  updateEmployee,
+} from "../services/EmployeeService";
 import { useNavigate, useParams } from "react-router-dom";
 
 const EmployeeComponent = () => {
@@ -31,17 +35,29 @@ const EmployeeComponent = () => {
     }
   }, [id]);
 
-  
-
-  function saveEmployee(e) {
+  function saveOrUpdateEmployee(e) {
     e.preventDefault();
+    const employee = { firstName, lastName, email };
     if (validateForm()) {
-      const employee = { firstName, lastName, email };
-
-      createEmployee(employee).then((response) => {
-        console.log(response.data);
-        navigator("/employees");
-      });
+      if (id) {
+        updateEmployee(id, employee)
+          .then((response) => {
+            console.log(response);
+            navigator("/employees");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        createEmployee(employee)
+          .then((response) => {
+            console.log(response.data);
+            navigator("/employees");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     }
   }
 
@@ -144,7 +160,10 @@ const EmployeeComponent = () => {
                 )}
               </div>
               <div className="form-group text-center m-4">
-                <button className="btn btn-success" onClick={saveEmployee}>
+                <button
+                  className="btn btn-success"
+                  onClick={saveOrUpdateEmployee}
+                >
                   Submit
                 </button>
               </div>
